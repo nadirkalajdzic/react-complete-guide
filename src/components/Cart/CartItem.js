@@ -1,10 +1,17 @@
-import classes from './CartItem.module.css';
+import { useState } from "react";
+import classes from "./CartItem.module.css";
 
 const CartItem = (props) => {
   const price = `$${props.price.toFixed(2)}`;
+  const [it, setIt] = useState(0);
+  var bool = false;
+
+  const increase = () => {
+    setIt((prevIt) => (bool ? prevIt + 1 : prevIt - 1));
+  };
 
   return (
-    <li className={classes['cart-item']}>
+    <li className={classes["cart-item"]}>
       <div>
         <h2>{props.name}</h2>
         <div className={classes.summary}>
@@ -15,6 +22,7 @@ const CartItem = (props) => {
       <div className={classes.actions}>
         <button onClick={props.onRemove}>−</button>
         <button onClick={props.onAdd}>+</button>
+        <button onClick={increase}>{it}</button>
       </div>
     </li>
   );
