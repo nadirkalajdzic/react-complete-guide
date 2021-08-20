@@ -1,36 +1,34 @@
-import Card from '../UI/Card';
-import MealItem from './MealItem/MealItem';
-import classes from './AvailableMeals.module.css';
-
-const DUMMY_MEALS = [
-  {
-    id: 'm1',
-    name: 'Sushi',
-    description: 'Finest fish and veggies',
-    price: 22.99,
-  },
-  {
-    id: 'm2',
-    name: 'Schnitzel',
-    description: 'A german specialty!',
-    price: 16.5,
-  },
-  {
-    id: 'm3',
-    name: 'Barbecue Burger',
-    description: 'American, raw, meaty',
-    price: 12.99,
-  },
-  {
-    id: 'm4',
-    name: 'Green Bowl',
-    description: 'Healthy...and green...',
-    price: 18.99,
-  },
-];
+import Card from "../UI/Card";
+import MealItem from "./MealItem/MealItem";
+import classes from "./AvailableMeals.module.css";
+import axios from "axios";
+import { useState, useEffect } from "react";
 
 const AvailableMeals = () => {
-  const mealsList = DUMMY_MEALS.map((meal) => (
+  const [meals, setMeals] = useState([]);
+
+  const transformData = (data) => {
+    let array = [];
+
+    for (const key in data)
+      array.push({
+        id: key,
+        name: data[key].name,
+        description: data[key].description,
+        price: data[key].price,
+      });
+
+    setMeals(array);
+  };
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_FIREBASE_FOOD_APP_URL}/meals.json`)
+      .then((res) => transformData(res.data))
+      .catch(console.log);
+  }, []);
+
+  const mealsList = meals.map((meal) => (
     <MealItem
       key={meal.id}
       id={meal.id}
