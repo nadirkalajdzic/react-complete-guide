@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 
 const AvailableMeals = () => {
   const [meals, setMeals] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const transformData = (data) => {
     let array = [];
@@ -21,11 +22,17 @@ const AvailableMeals = () => {
     setMeals(array);
   };
 
-  useEffect(() => {
+  const fetchMeals = () =>
     axios
       .get(`${process.env.REACT_APP_FIREBASE_FOOD_APP_URL}/meals.json`)
-      .then((res) => transformData(res.data))
+      .then((res) => {
+        transformData(res.data);
+        setIsLoading(false);
+      })
       .catch(console.log);
+
+  useEffect(() => {
+    setTimeout(fetchMeals, 1000);
   }, []);
 
   const mealsList = meals.map((meal) => (
@@ -38,12 +45,14 @@ const AvailableMeals = () => {
     />
   ));
 
-  return (
+  return !isLoading ? (
     <section className={classes.meals}>
-      <Card>
-        <ul>{mealsList}</ul>
-      </Card>
+      <Card>{mealsList}</Card>
     </section>
+  ) : (
+    <div style={{ textAlign: "center", color: "white", marginTop: 25 }}>
+      Loading..
+    </div>
   );
 };
 
