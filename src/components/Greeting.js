@@ -1,10 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 
 function Greeting() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const changeVisibility = () => {
+    setIsVisible((prevState) => !prevState);
+  };
+
   return (
     <div>
-      <h2>Hello World!</h2>
-      <p>It's good to see you!</p>
+      {isVisible && (
+        <>
+          <h2>Hello World!</h2>
+          <p>It's good to see you!</p>
+        </>
+      )}
+      <button onClick={changeVisibility}>Toggle visible</button>
     </div>
   );
 }
